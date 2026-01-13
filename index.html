@@ -10,19 +10,10 @@
     --bg1:#0b1020; --bg2:#0b2a55;
     --stroke: rgba(255,255,255,.18);
     --text:#f7fbff; --muted: rgba(247,251,255,.75);
-
-    --green:#16a34a;
-    --yellow:#facc15;
-    --red:#ef4444;
-    --blue:#2563eb;
-
-    --p1:#34d399;   /* learner token */
-    --p2:#fb7185;   /* computer token */
-
+    --p1:#34d399; --p2:#fb7185;
     --shadow: 0 12px 35px rgba(0,0,0,.35);
     --radius: 18px;
   }
-
   *{box-sizing:border-box}
   body{
     margin:0;
@@ -35,7 +26,6 @@
       radial-gradient(900px 700px at 80% 90%, rgba(251,113,133,.22), transparent 60%),
       linear-gradient(160deg, var(--bg1), var(--bg2));
   }
-
   .wrap{
     max-width: 1200px;
     margin: 0 auto;
@@ -44,7 +34,6 @@
     grid-template-columns: 1fr;
     gap: 14px;
   }
-
   .topbar{
     display:flex; align-items:center; justify-content:space-between;
     gap:12px;
@@ -54,7 +43,6 @@
     background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.06));
     box-shadow: var(--shadow);
   }
-
   .brand{ display:flex; align-items:center; gap:10px; min-width: 0; }
   .logo{
     width:38px; height:38px; border-radius:12px;
@@ -69,9 +57,7 @@
     white-space: nowrap; overflow:hidden; text-overflow: ellipsis;
   }
   .brand p{ margin:2px 0 0; font-size: 12px; color: var(--muted); }
-
   .actions{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:flex-end; }
-
   button{
     border: 1px solid var(--stroke);
     background: rgba(255,255,255,.10);
@@ -118,6 +104,20 @@
   .screen{ display:none; }
   .screen.active{ display:block; }
 
+  /* Error box */
+  .errBox{
+    display:none;
+    margin: 12px 0 0;
+    padding: 12px 12px;
+    border-radius: 16px;
+    border: 1px solid rgba(239,68,68,.45);
+    background: rgba(239,68,68,.12);
+    color: rgba(255,255,255,.95);
+    font-size: 13px;
+    line-height: 1.45;
+    white-space: pre-wrap;
+  }
+
   /* Quiz */
   .qText{
     font-size: 16px; font-weight: 950;
@@ -144,7 +144,7 @@
   .optBtn:hover{ background: rgba(255,255,255,.12); }
   .note{ font-size: 12px; color: var(--muted); line-height: 1.5; }
 
-  /* Board wrapper */
+  /* Board */
   .boardWrap{ display:flex; flex-direction: column; gap: 12px; }
   .boardTopInfo{
     display:flex; justify-content:space-between; align-items:flex-start; gap:10px;
@@ -159,7 +159,6 @@
   .pill .k{ font-size:12px; color: var(--muted); }
   .pill .v{ font-size: 15px; font-weight: 950; margin-top: 2px; }
 
-  /* Ludo-like frame */
   .board{
     width: min(580px, 100%);
     aspect-ratio: 1 / 1;
@@ -233,9 +232,7 @@
       radial-gradient(circle at 30% 25%, rgba(34,197,94,.45), rgba(255,255,255,.92));
   }
 
-  .cell.safe{
-    border-color: rgba(245,158,11,.55);
-  }
+  .cell.safe{ border-color: rgba(245,158,11,.55); }
   .cell.safe::after{
     content:"★";
     position:absolute;
@@ -278,7 +275,6 @@
     100%{ transform: translateY(0) scale(1); }
   }
 
-  /* FX overlay */
   .fxLayer{
     position:absolute;
     inset:28px;
@@ -316,7 +312,6 @@
     100%{ transform: translate(var(--dx), var(--dy)) scale(.45); opacity:0; }
   }
 
-  /* Small UI dice (panel) */
   .diceRow{
     display:flex; align-items:center; gap: 10px; justify-content:space-between;
     flex-wrap:wrap;
@@ -340,7 +335,6 @@
     100%{ transform: rotate(360deg) scale(1); }
   }
 
-  /* Big center dice (board) */
   #centerDice{
     position:absolute;
     left:50%; top:50%;
@@ -379,19 +373,10 @@
   #centerDice.face4 .p1,#centerDice.face4 .p3,#centerDice.face4 .p7,#centerDice.face4 .p9{opacity:1;}
   #centerDice.face5 .p1,#centerDice.face5 .p3,#centerDice.face5 .p5,#centerDice.face5 .p7,#centerDice.face5 .p9{opacity:1;}
   #centerDice.face6 .p1,#centerDice.face6 .p3,#centerDice.face6 .p4,#centerDice.face6 .p6,#centerDice.face6 .p7,#centerDice.face6 .p9{opacity:1;}
+  .p1{left:26px; top:26px;} .p2{left:63px; top:26px;} .p3{left:100px; top:26px;}
+  .p4{left:26px; top:63px;} .p5{left:63px; top:63px;} .p6{left:100px; top:63px;}
+  .p7{left:26px; top:100px;} .p8{left:63px; top:100px;} .p9{left:100px; top:100px;}
 
-  /* pip positions (3x3) */
-  .p1{left:26px; top:26px;}
-  .p2{left:63px; top:26px;}
-  .p3{left:100px; top:26px;}
-  .p4{left:26px; top:63px;}
-  .p5{left:63px; top:63px;}
-  .p6{left:100px; top:63px;}
-  .p7{left:26px; top:100px;}
-  .p8{left:63px; top:100px;}
-  .p9{left:100px; top:100px;}
-
-  /* Modal */
   .overlay{
     position: fixed; inset: 0;
     background: rgba(0,0,0,.55);
@@ -483,7 +468,6 @@
     </div>
   </div>
 
-  <!-- SCREEN 1: MCQ ONLY -->
   <div class="card screen active" id="mcqScreen">
     <div class="hd">
       <div>
@@ -495,13 +479,13 @@
     <div class="bd">
       <p class="qText" id="qText">Loading…</p>
       <div class="optGrid" id="opts"></div>
+      <div class="errBox" id="errBox"></div>
       <div class="note" style="margin-top:12px">
         Correct → dice rolls and you move • Wrong → computer moves +2
       </div>
     </div>
   </div>
 
-  <!-- SCREEN 2: BOARD ONLY -->
   <div class="card screen" id="boardScreen">
     <div class="hd">
       <div>
@@ -535,7 +519,6 @@
         <div class="board" id="board">
           <canvas class="boardBg" id="boardBg"></canvas>
 
-          <!-- big center dice -->
           <div id="centerDice" class="face1" aria-hidden="true">
             <span class="pip p1"></span><span class="pip p2"></span><span class="pip p3"></span>
             <span class="pip p4"></span><span class="pip p5"></span><span class="pip p6"></span>
@@ -570,18 +553,35 @@
 
 <script>
 (() => {
-  /* =========================
-     SETTINGS
-  ========================= */
+  const errBox = document.getElementById("errBox");
+  function showErr(msg){
+    if (!errBox) return;
+    errBox.style.display = "block";
+    errBox.textContent = msg;
+  }
+
+  window.addEventListener("error", (e) => {
+    const msg = `Startup Error:\n${e.message}\n${e.filename || ""}:${e.lineno || ""}`;
+    showErr(msg);
+  });
+
+  window.addEventListener("unhandledrejection", (e) => {
+    const msg = `Unhandled Promise Error:\n${(e.reason && e.reason.message) ? e.reason.message : String(e.reason)}`;
+    showErr(msg);
+  });
+
+  function must(id){
+    const el = document.getElementById(id);
+    if (!el) throw new Error(`Missing element id="${id}"`);
+    return el;
+  }
+
+  /* SETTINGS */
   const COMPUTER_STEP_ON_WRONG = 2;
   const RETURN_TO_MCQ_DELAY_MS = 1800;
 
-  // Spark on landing (keep simple and consistent)
   const SAFE_INDICES = new Set([3, 7, 11, 15, 19]);
 
-  /* =========================
-     TRACK (7x7 overlay path)
-  ========================= */
   const TRACK_GRID_INDEX = [
     2,3,4,5,6,
     13,20,27,34,41,
@@ -591,117 +591,91 @@
   ];
   const FINISH_INDEX = TRACK_GRID_INDEX.length - 1;
 
-  /* =========================
-     HARDWIRED MCQs (same set)
-     Note:
-     - a is 0..3 index
-  ========================= */
-  let QUESTIONS = [
+  /* HARDWIRED MCQs */
+  const QUESTIONS = [
     { id:"SMS_LUDO_Q01", q:"Why is using https:// recommended when logging into social networking sites?",
       opts:["It encrypts traffic between your browser and the site","It blocks all ads automatically","It prevents account creation","It makes your posts invisible to the platform"],
-      a:0,
-      fb:"HTTPS encrypts data in transit (like passwords and messages), reducing interception risk."
+      a:0, fb:"HTTPS encrypts data in transit (like passwords and messages), reducing interception risk."
     },
     { id:"SMS_LUDO_Q02", q:"During Facebook setup, what is the safer choice on the “Find Your Friends” step?",
       opts:["Enter your email password so Facebook can import contacts","Skip providing your email password to Facebook","Share your phone contacts publicly","Turn on public search immediately"],
-      a:1,
-      fb:"Avoid sharing your email password for contact importing."
+      a:1, fb:"Avoid sharing your email password for contact importing."
     },
     { id:"SMS_LUDO_Q03", q:"Which Facebook feature can alert you if someone logs in from an unfamiliar device?",
       opts:["Public Search","Privacy Shortcuts","Login Notifications","Friend Suggestions"],
-      a:2,
-      fb:"Login Notifications can warn you about logins from devices you have not used before."
+      a:2, fb:"Login Notifications can warn you about logins from devices you have not used before."
     },
     { id:"SMS_LUDO_Q04", q:"To reduce exposure in Facebook advertising settings, a recommended choice for “Third Party Sites” is:",
       opts:["Everyone","Friends","Only Me","No-one"],
-      a:3,
-      fb:"Setting it to “No-one” reduces third-party advertising association."
+      a:3, fb:"Setting it to “No-one” reduces third-party advertising association."
     },
     { id:"SMS_LUDO_Q05", q:"If you want your Facebook status updates visible only to your contacts, choose:",
       opts:["Friends Only (or a restricted audience you choose)","Public (everyone)","Friends of friends","Anyone via search engines"],
-      a:0,
-      fb:"Use a restricted audience like “Friends Only” for routine posts."
+      a:0, fb:"Use a restricted audience like “Friends Only” for routine posts."
     },
     { id:"SMS_LUDO_Q06", q:"What is a safer practice before posting a photo/video of another person?",
       opts:["Post first and ask later","Get their consent first","Always tag them publicly","Share it only in comments"],
-      a:1,
-      fb:"Consent matters because posts can be copied, reshared, and misunderstood later."
+      a:1, fb:"Consent matters because posts can be copied, reshared, and misunderstood later."
     },
     { id:"SMS_LUDO_Q07", q:"Which Twitter setting limits tweets so only approved followers can see them?",
       opts:["Discoverability","Tweet location","Protect your Tweets","Personalization"],
-      a:2,
-      fb:"Protecting tweets makes your content visible only to approved followers."
+      a:2, fb:"Protecting tweets makes your content visible only to approved followers."
     },
     { id:"SMS_LUDO_Q08", q:"A key risk of linking/auto-posting between multiple social networks is:",
       opts:["It guarantees anonymity everywhere","It always improves privacy","It prevents metadata leaks","You may be anonymous on one site but exposed on another"],
-      a:3,
-      fb:"Cross-posting can connect identities across platforms."
+      a:3, fb:"Cross-posting can connect identities across platforms."
     },
     { id:"SMS_LUDO_Q09", q:"Why should you be cautious while sharing photos/videos online (even with privacy settings)?",
       opts:["They can reveal identities and sensitive details like location/time","They always delete automatically","They cannot be copied by others","They are invisible to service providers"],
-      a:0,
-      fb:"Images/videos can leak personal information and may be downloaded or reshared."
+      a:0, fb:"Images/videos can leak personal information and may be downloaded or reshared."
     },
     { id:"SMS_LUDO_Q10", q:"What is a safer approach to location sharing on social media?",
       opts:["Enable location on every post","Keep location off unless needed and double-check settings","Share live location publicly during travel","Assume location cannot be inferred without GPS"],
-      a:1,
-      fb:"Location can reveal routines and real-time presence. Keep it off unless necessary."
+      a:1, fb:"Location can reveal routines and real-time presence. Keep it off unless necessary."
     },
     { id:"SMS_LUDO_Q11", q:"If your browser warns about an invalid security certificate while using webmail, it may indicate:",
       opts:["Your inbox is full","Your password is too strong","Possible interception/tampering of the connection","Your account is permanently deleted"],
-      a:2,
-      fb:"Certificate warnings can signal a man-in-the-middle risk or misconfigured security."
+      a:2, fb:"Certificate warnings can signal a man-in-the-middle risk or misconfigured security."
     },
     { id:"SMS_LUDO_Q12", q:"The chapter compares social networking sites to a “huge party” mainly to suggest that:",
       opts:["Only friends can see your content","Privacy settings fully prevent exposure","Everyone at the party is trustworthy","You may reveal personal details widely without realizing it"],
-      a:3,
-      fb:"The metaphor highlights unintended oversharing and broad visibility."
+      a:3, fb:"The metaphor highlights unintended oversharing and broad visibility."
     },
     { id:"SMS_LUDO_Q13", q:"Which email practice reduces malware risk?",
       opts:["Avoid unexpected attachments, especially from unknown senders","Open all attachments quickly to check content","Disable antivirus warnings","Forward suspicious attachments to others"],
-      a:0,
-      fb:"Unexpected attachments are a common malware route; verify before opening."
+      a:0, fb:"Unexpected attachments are a common malware route; verify before opening."
     },
     { id:"SMS_LUDO_Q14", q:"To avoid revealing identity when creating an email account, the guide suggests using:",
       opts:["Your full legal name as username","Anonymity software such as Tor","The same username everywhere","Only your official work email"],
-      a:1,
-      fb:"Tor can help hide network identity; also avoid usernames linked to your real identity."
+      a:1, fb:"Tor can help hide network identity; also avoid usernames linked to your real identity."
     },
     { id:"SMS_LUDO_Q15", q:"A common sign of an email scam is:",
       opts:["A friendly message that matches an ongoing conversation","A newsletter you subscribed to from a trusted source","An urgent warning asking you to click a link and “verify” or “update” your account","A normal reply that contains no links or requests"],
-      a:2,
-      fb:"Scams often create urgency and push you to click links or submit credentials."
+      a:2, fb:"Scams often create urgency and push you to click links or submit credentials."
     },
     { id:"SMS_LUDO_Q16", q:"A safer response if you receive an unexpected password-reset email is:",
       opts:["Click the link immediately","Reply with your details to confirm","Ignore and continue using the same password","Visit the service by typing the official URL yourself and check account activity"],
-      a:3,
-      fb:"Avoid clicking links in suspicious emails; go directly to the official site/app."
+      a:3, fb:"Avoid clicking links in suspicious emails; go directly to the official site/app."
     },
     { id:"SMS_LUDO_Q17", q:"Why is it risky to use the same password across social platforms?",
       opts:["One breach can lead to multiple account takeovers (credential reuse)","It prevents password recovery","It forces public posting","It stops you from using HTTPS"],
-      a:0,
-      fb:"If one site is compromised, attackers try the same password elsewhere."
+      a:0, fb:"If one site is compromised, attackers try the same password elsewhere."
     },
     { id:"SMS_LUDO_Q18", q:"What is a safer setting for photo tagging if you want to reduce risk?",
       opts:["Allow everyone to tag you","Do not allow photo tagging / restrict it as much as possible","Enable tagging suggestions","Auto-approve all tags"],
-      a:1,
-      fb:"Tagging can expose you and your connections. Restrict or disable if possible."
+      a:1, fb:"Tagging can expose you and your connections. Restrict or disable if possible."
     },
     { id:"SMS_LUDO_Q19", q:"When installing third-party apps connected to your social accounts, the best first step is to:",
       opts:["Install quickly and decide later","Grant all permissions to avoid errors","Review permissions and avoid apps requesting unnecessary access","Share the app link with everyone"],
-      a:2,
-      fb:"App permissions can expose data. Avoid apps requesting more access than needed."
+      a:2, fb:"App permissions can expose data. Avoid apps requesting more access than needed."
     },
     { id:"SMS_LUDO_Q20", q:"A safe practice to limit oversharing on social media is:",
       opts:["Always keep profiles public","Post travel plans in real time publicly","Share personal identifiers (DOB, address) to build trust","Use privacy settings + think before posting sensitive details"],
-      a:3,
-      fb:"Privacy settings help, but judgment before posting is equally important."
+      a:3, fb:"Privacy settings help, but judgment before posting is equally important."
     }
   ];
 
-  /* =========================
-     STATE
-  ========================= */
+  /* STATE */
   let order = [];
   let qi = 0;
   let answered = 0;
@@ -712,53 +686,40 @@
   let gameOver = false;
   let pending = null;
 
-  /* =========================
-     ELEMENTS
-  ========================= */
-  const app = document.getElementById("app");
-  const mcqScreen = document.getElementById("mcqScreen");
-  const boardScreen = document.getElementById("boardScreen");
-
-  const trackEl = document.getElementById("track");
-  const fxLayer = document.getElementById("fxLayer");
-
-  const qTextEl = document.getElementById("qText");
-  const optsEl = document.getElementById("opts");
-
-  const p1PosEl = document.getElementById("p1Pos");
-  const p2PosEl = document.getElementById("p2Pos");
-  const maxPosEl = document.getElementById("maxPos");
-  const maxPos2El = document.getElementById("maxPos2");
-  const qDoneEl = document.getElementById("qDone");
-  const qTotalEl = document.getElementById("qTotal");
-  const qCorrectEl = document.getElementById("qCorrect");
-  const diceEl = document.getElementById("dice");
-  const statusTextEl = document.getElementById("statusText");
-  const animHintEl = document.getElementById("animHint");
-
-  const overlay = document.getElementById("overlay");
-  const modalTitle = document.getElementById("modalTitle");
-  const modalBody = document.getElementById("modalBody");
-  const bigPop = document.getElementById("bigPop");
-
-  const confettiCanvas = document.getElementById("confetti");
+  /* ELEMENTS (strict) */
+  const mcqScreen = must("mcqScreen");
+  const boardScreen = must("boardScreen");
+  const trackEl = must("track");
+  const fxLayer = must("fxLayer");
+  const qTextEl = must("qText");
+  const optsEl = must("opts");
+  const p1PosEl = must("p1Pos");
+  const p2PosEl = must("p2Pos");
+  const maxPosEl = must("maxPos");
+  const maxPos2El = must("maxPos2");
+  const qDoneEl = must("qDone");
+  const qTotalEl = must("qTotal");
+  const qCorrectEl = must("qCorrect");
+  const diceEl = must("dice");
+  const statusTextEl = must("statusText");
+  const animHintEl = must("animHint");
+  const overlay = must("overlay");
+  const modalTitle = must("modalTitle");
+  const modalBody = must("modalBody");
+  const bigPop = must("bigPop");
+  const confettiCanvas = must("confetti");
   const confettiCtx = confettiCanvas.getContext("2d");
+  const boardBg = must("boardBg");
+  const centerDice = must("centerDice");
+  const btnHow = must("btnHow");
+  const btnRestart = must("btnRestart");
+  const btnSkip = must("btnSkip");
+  const btnClose = must("btnClose");
 
-  const boardBg = document.getElementById("boardBg");
-  const centerDice = document.getElementById("centerDice");
-
-  const btnHow = document.getElementById("btnHow");
-  const btnRestart = document.getElementById("btnRestart");
-  const btnSkip = document.getElementById("btnSkip");
-  const btnClose = document.getElementById("btnClose");
-
-  /* =========================
-     EVENTS
-  ========================= */
+  /* EVENTS */
   btnHow.addEventListener("click", showHow);
   btnClose.addEventListener("click", hideModal);
   overlay.addEventListener("click", (e) => { if (e.target === overlay) hideModal(); });
-
   btnRestart.addEventListener("click", restart);
   btnSkip.addEventListener("click", () => {
     if (locked || gameOver) return;
@@ -766,9 +727,7 @@
     advanceQuestion();
   });
 
-  /* =========================
-     INIT
-  ========================= */
+  /* INIT */
   maxPosEl.textContent = String(TRACK_GRID_INDEX.length - 1);
   maxPos2El.textContent = String(TRACK_GRID_INDEX.length - 1);
 
@@ -778,9 +737,7 @@
 
   restart();
 
-  /* =========================
-     SCREEN CONTROL
-  ========================= */
+  /* SCREEN CONTROL */
   function showScreen(which){
     if (which === "mcq"){
       mcqScreen.classList.add("active");
@@ -792,9 +749,7 @@
     }
   }
 
-  /* =========================
-     BOARD (7x7 overlay)
-  ========================= */
+  /* BOARD (7x7 overlay) */
   function buildBoard(){
     trackEl.innerHTML = "";
     for(let i=0;i<49;i++){
@@ -829,12 +784,10 @@
 
   function getTrackCell(pos){
     const gridIndex = TRACK_GRID_INDEX[pos];
-    return document.querySelector(\`.cell[data-grid="\${gridIndex}"]\`);
+    return document.querySelector(`.cell[data-grid="${gridIndex}"]`);
   }
 
-  /* =========================
-     LUDO BACKGROUND (canvas)
-  ========================= */
+  /* LUDO BACKGROUND */
   function drawLudoBackground(){
     const rect = boardBg.getBoundingClientRect();
     const dpr = Math.max(1, window.devicePixelRatio || 1);
@@ -853,12 +806,10 @@
     const x0 = pad, y0 = pad, w = W - pad*2, h = H - pad*2;
     const r = 22;
 
-    // base plate
     roundRect(ctx, x0, y0, w, h, r);
     ctx.fillStyle = "rgba(255,255,255,1)";
     ctx.fill();
 
-    // corners
     const halfW = w/2;
     const halfH = h/2;
 
@@ -867,13 +818,11 @@
     fillCorner(ctx, x0, y0+halfH, halfW, halfH, "rgba(239,68,68,0.98)");
     fillCorner(ctx, x0+halfW, y0+halfH, halfW, halfH, "rgba(37,99,235,0.98)");
 
-    // white cross
     const crossW = w * 0.18;
     ctx.fillStyle = "rgba(255,255,255,1)";
     ctx.fillRect(x0 + halfW - crossW/2, y0, crossW, h);
     ctx.fillRect(x0, y0 + halfH - crossW/2, w, crossW);
 
-    // colored lanes inside cross
     const lane = w * 0.06;
     ctx.fillStyle = "rgba(22,163,74,0.98)";
     ctx.fillRect(x0 + halfW - lane/2, y0, lane, halfH);
@@ -884,7 +833,6 @@
     ctx.fillStyle = "rgba(37,99,235,0.98)";
     ctx.fillRect(x0 + halfW, y0 + halfH, lane, halfH);
 
-    // printed grid lines
     ctx.save();
     ctx.globalAlpha = 0.14;
     ctx.strokeStyle = "#000";
@@ -897,7 +845,6 @@
     }
     ctx.restore();
 
-    // center diamond
     const cx = x0 + halfW;
     const cy = y0 + halfH;
     ctx.save();
@@ -909,11 +856,9 @@
     const d = w * 0.13;
     ctx.beginPath();
     ctx.rect(-d, -d, d*2, d*2);
-    ctx.fill();
-    ctx.stroke();
+    ctx.fill(); ctx.stroke();
     ctx.restore();
 
-    // home circles + 4 dots
     drawHomeCircle(ctx, x0 + halfW*0.5, y0 + halfH*0.5, w*0.12, "rgba(255,255,255,0.92)");
     drawHomeCircle(ctx, x0 + halfW*1.5, y0 + halfH*0.5, w*0.12, "rgba(255,255,255,0.92)");
     drawHomeCircle(ctx, x0 + halfW*0.5, y0 + halfH*1.5, w*0.12, "rgba(255,255,255,0.92)");
@@ -924,7 +869,6 @@
     dot4(ctx, x0 + halfW*0.5, y0 + halfH*1.5, w*0.12, "rgba(239,68,68,0.98)");
     dot4(ctx, x0 + halfW*1.5, y0 + halfH*1.5, w*0.12, "rgba(37,99,235,0.98)");
 
-    // border line
     ctx.save();
     ctx.strokeStyle = "rgba(0,0,0,0.20)";
     ctx.lineWidth = 2;
@@ -983,14 +927,10 @@
     ctx.restore();
   }
 
-  /* =========================
-     GAME FLOW
-  ========================= */
+  /* GAME FLOW */
   function restart(){
+    // fixed order Q01..Q20
     order = Array.from({length: QUESTIONS.length}, (_,i)=>i);
-
-    // Keep control-group order (Q01..Q20) strictly:
-    // Do NOT shuffle.
 
     qi = 0;
     answered = 0;
@@ -1002,31 +942,19 @@
 
     diceEl.textContent = "—";
     diceEl.classList.remove("rolling");
-
     centerDice.className = "face1";
     centerDice.classList.remove("show","rolling");
 
-    clearGlows();
     clearFx();
-
-    maxPosEl.textContent = String(FINISH_INDEX);
-    maxPos2El.textContent = String(FINISH_INDEX);
-
-    qTotalEl.textContent = String(QUESTIONS.length);
-
-    updateStats();
     renderTokens();
 
-    statusTextEl.textContent = "Waiting…";
-    animHintEl.textContent = "Waiting…";
+    qTotalEl.textContent = String(QUESTIONS.length);
+    updateStats();
 
     showScreen("mcq");
     renderQuestion();
   }
 
-  function clearGlows(){
-    document.querySelectorAll(".cell").forEach(c => c.classList.remove("glowP1","glowP2"));
-  }
   function clearFx(){ fxLayer.innerHTML = ""; }
 
   function renderTokens(){
@@ -1046,7 +974,7 @@
 
   function renderQuestion(){
     if (qi >= order.length){
-      endByQuestions();
+      showErr("All questions finished. Click Restart.");
       return;
     }
     const Q = QUESTIONS[order[qi]];
@@ -1078,8 +1006,6 @@
       showFeedback(true, Q.fb || "Good.", () => runPendingAnimationAndAdvance());
     } else {
       popBad("Wrong!");
-      app.classList.remove("shake"); void app.offsetWidth; app.classList.add("shake");
-
       const correctLetter = ["A","B","C","D"][Q.a];
       const correctText = Q.opts[Q.a];
       pending = { type:"wrong", steps: COMPUTER_STEP_ON_WRONG, fb: Q.fb || "", corr: {letter: correctLetter, text: correctText} };
@@ -1102,7 +1028,6 @@
 
     showScreen("board");
     clearFx();
-    clearGlows();
     renderTokens();
     updateStats();
 
@@ -1110,7 +1035,6 @@
       animHintEl.textContent = "Correct → rolling dice…";
       statusTextEl.textContent = "Rolling…";
 
-      // show big center dice + small UI dice rolling
       centerDice.classList.add("show","rolling");
       diceEl.classList.add("rolling");
 
@@ -1135,26 +1059,17 @@
       statusTextEl.textContent = `You move ${pending.roll} step(s).`;
       await movePlayerAnimated(1, pending.roll);
     } else {
-      diceEl.textContent = "—";
-      diceEl.classList.remove("rolling");
-      centerDice.classList.remove("rolling");
-      centerDice.classList.remove("show");
-
       animHintEl.textContent = `Wrong → computer moves +${pending.steps}`;
       statusTextEl.textContent = `Computer moves ${pending.steps} step(s).`;
       await movePlayerAnimated(2, pending.steps);
     }
 
-    checkEnd();
-    if (!gameOver){
-      animHintEl.textContent = "Enjoy the board…";
-      await sleep(RETURN_TO_MCQ_DELAY_MS);
+    await sleep(RETURN_TO_MCQ_DELAY_MS);
 
-      advanceQuestion();
-      showScreen("mcq");
-      locked = false;
-    }
-
+    qi += 1;
+    showScreen("mcq");
+    renderQuestion();
+    locked = false;
     pending = null;
   }
 
@@ -1164,163 +1079,32 @@
 
   async function movePlayerAnimated(which, steps){
     const isLearner = (which === 1);
-    const glowClass = isLearner ? "glowP1" : "glowP2";
     const trailColor = isLearner ? "rgba(52,211,153,.90)" : "rgba(251,113,133,.90)";
 
     for(let s=0; s<steps; s++){
       if (isLearner) p1 = Math.min(FINISH_INDEX, p1 + 1);
       else p2 = Math.min(FINISH_INDEX, p2 + 1);
 
-      clearGlows();
-      const posNow = isLearner ? p1 : p2;
-      const cell = getTrackCell(posNow);
-      if (cell) cell.classList.add(glowClass);
-
       renderTokens();
       updateStats();
 
+      const posNow = isLearner ? p1 : p2;
+      const cell = getTrackCell(posNow);
       if (cell){
         const {x,y} = cellCenterInFxLayer(cell);
         spawnTrail(x, y, trailColor);
-
         if (SAFE_INDICES.has(posNow)) spawnSpark(x, y);
+        const token = cell.querySelector(isLearner ? ".t1" : ".t2");
+        if (token){
+          token.classList.remove("hop");
+          void token.offsetWidth;
+          token.classList.add("hop");
+        }
       }
-
-      const token = cell ? cell.querySelector(isLearner ? ".t1" : ".t2") : null;
-      if (token){
-        token.classList.remove("hop");
-        void token.offsetWidth;
-        token.classList.add("hop");
-      }
-
       await sleep(170);
-      if ((isLearner && p1 >= FINISH_INDEX) || (!isLearner && p2 >= FINISH_INDEX)) break;
-    }
-    clearGlows();
-  }
-
-  function advanceQuestion(){ qi += 1; renderQuestion(); }
-
-  function checkEnd(){
-    if (p1 >= FINISH_INDEX){
-      gameOver = true;
-      fireConfettiLight(1200);
-      showModal(
-        "You reached Home 🎉",
-        `
-          <div class="note">You reached HOME first.</div>
-          <div class="kbd">
-            <div><b>Your score:</b> ${correct} / ${QUESTIONS.length}</div>
-            <div><b>Model B:</b> Computer moves only when you are wrong.</div>
-          </div>
-        `
-      );
-      locked = true;
-      return;
-    }
-
-    if (p2 >= FINISH_INDEX){
-      gameOver = true;
-      showModal(
-        "System reached Home",
-        `
-          <div class="note">Computer reached HOME first.</div>
-          <div class="kbd">
-            <div><b>Your score:</b> ${correct} / ${QUESTIONS.length}</div>
-            <div>Restart and focus on accuracy to stay ahead.</div>
-          </div>
-        `
-      );
-      locked = true;
     }
   }
 
-  function endByQuestions(){
-    gameOver = true;
-    const acc = QUESTIONS.length ? Math.round((correct/QUESTIONS.length)*100) : 0;
-    const pass = acc >= 60;
-
-    showModal(
-      "Quiz Finished",
-      `
-        <div class="note">You completed all questions. Accuracy is the main score.</div>
-        <div class="kbd">
-          <div><b>Correct:</b> ${correct} / ${QUESTIONS.length} (${acc}%)</div>
-          <div><b>Status:</b> ${pass ? `<span style="color:rgba(34,197,94,.95);font-weight:900;">Good mastery</span>` :
-                                   `<span style="color:rgba(245,158,11,.95);font-weight:900;">Needs revision</span>`}
-          </div>
-          <div>You can restart to practice again.</div>
-        </div>
-      `
-    );
-    locked = true;
-  }
-
-  /* =========================
-     MODAL / UI
-  ========================= */
-  function showHow(){
-    showModal(
-      "How to Play (Model B)",
-      `
-        <div class="note">
-          One screen at a time: <b>MCQ</b> → <b>Board animation</b> → next <b>MCQ</b>.
-        </div>
-        <div class="kbd">
-          <div><b>Correct:</b> Dice rolls and learner token moves step-by-step.</div>
-          <div><b>Wrong:</b> Learner does not move, computer moves <b>+${COMPUTER_STEP_ON_WRONG}</b>.</div>
-          <div><b>Effects:</b> Trail on movement, spark on safe squares, confetti on HOME.</div>
-          <div><b>Goal:</b> Reach <b>HOME</b> before the computer by keeping accuracy high.</div>
-          <div><b>Order:</b> Questions are in the fixed control-group sequence (Q01–Q20).</div>
-        </div>
-      `
-    );
-  }
-
-  function showFeedback(isCorrect, html, onContinue){
-    const title = isCorrect ? "Correct ✅" : "Wrong ❌";
-    const body = `
-      <div class="note">${html}</div>
-      <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:14px;">
-        <button class="primary" id="continueBtn">${gameOver ? "Close" : "Continue"}</button>
-      </div>
-    `;
-    showModal(title, body);
-    setTimeout(() => {
-      const btn = document.getElementById("continueBtn");
-      if (btn){
-        btn.addEventListener("click", async () => {
-          if (typeof onContinue === "function") await onContinue();
-        });
-      }
-    }, 0);
-  }
-
-  function showModal(title, html){
-    modalTitle.textContent = title;
-    modalBody.innerHTML = html;
-    overlay.style.display = "flex";
-  }
-  function hideModal(){ overlay.style.display = "none"; }
-
-  function popOK(txt){ showPop(txt, "ok"); }
-  function popBad(txt){ showPop(txt, "bad"); }
-  function popNeutral(txt){
-    bigPop.className = "bigPop";
-    bigPop.textContent = txt;
-    bigPop.style.display = "block";
-    setTimeout(() => bigPop.style.display="none", 850);
-  }
-  function showPop(txt, cls){
-    bigPop.className = `bigPop ${cls}`;
-    bigPop.textContent = txt;
-    bigPop.style.display = "block";
-    setTimeout(() => bigPop.style.display="none", 650);
-  }
-
-  /* =========================
-     FX: trail + spark
-  ========================= */
   function cellCenterInFxLayer(cellEl){
     const fxRect = fxLayer.getBoundingClientRect();
     const cellRect = cellEl.getBoundingClientRect();
@@ -1364,91 +1148,68 @@
     setTimeout(() => wrap.remove(), 560);
   }
 
-  /* =========================
-     CONFETTI
-  ========================= */
-  function resizeConfettiCanvas(){
-    const dpr = Math.max(1, window.devicePixelRatio || 1);
-    confettiCanvas.width = Math.floor(window.innerWidth * dpr);
-    confettiCanvas.height = Math.floor(window.innerHeight * dpr);
-    confettiCanvas.style.width = "100vw";
-    confettiCanvas.style.height = "100vh";
-    confettiCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  /* MODAL / UI */
+  function showHow(){
+    showModal(
+      "How to Play (Model B)",
+      `
+        <div class="note">
+          One screen at a time: <b>MCQ</b> → <b>Board animation</b> → next <b>MCQ</b>.
+        </div>
+        <div class="kbd">
+          <div><b>Correct:</b> Dice rolls and learner token moves step-by-step.</div>
+          <div><b>Wrong:</b> Learner does not move, computer moves <b>+${COMPUTER_STEP_ON_WRONG}</b>.</div>
+          <div><b>Effects:</b> Trail on movement, spark on safe squares.</div>
+          <div><b>Order:</b> Fixed control-group sequence (Q01–Q20).</div>
+        </div>
+      `
+    );
   }
 
-  window.addEventListener("resize", () => {
-    if (confettiCanvas.style.display === "block") resizeConfettiCanvas();
-  });
-
-  function fireConfettiLight(durationMs = 1200){
-    resizeConfettiCanvas();
-    confettiCanvas.style.display = "block";
-
-    const W = window.innerWidth;
-    const H = window.innerHeight;
-
-    const colors = [
-      "hsl(150 75% 55%)",
-      "hsl(205 85% 60%)",
-      "hsl(330 85% 65%)",
-      "hsl(45 95% 60%)"
-    ];
-
-    const parts = [];
-    const N = 90;
-    for(let i=0;i<N;i++){
-      parts.push({
-        x: Math.random() * W,
-        y: -20 - Math.random()*H*0.2,
-        vx: -1.2 + Math.random()*2.4,
-        vy: 2.0 + Math.random()*3.4,
-        size: 4 + Math.random()*5,
-        rot: Math.random()*Math.PI*2,
-        vr: -0.12 + Math.random()*0.24,
-        c: colors[Math.floor(Math.random()*colors.length)]
-      });
-    }
-
-    let start = performance.now();
-    function tick(now){
-      const t = now - start;
-      confettiCtx.clearRect(0,0,W,H);
-      confettiCtx.globalAlpha = 0.95;
-
-      for(const p of parts){
-        p.x += p.vx;
-        p.y += p.vy;
-        p.vy += 0.02;
-        p.rot += p.vr;
-
-        confettiCtx.save();
-        confettiCtx.translate(p.x, p.y);
-        confettiCtx.rotate(p.rot);
-        confettiCtx.fillStyle = p.c;
-        confettiCtx.fillRect(-p.size/2, -p.size/3, p.size, p.size*0.66);
-        confettiCtx.restore();
-      }
-
-      if (t < durationMs){
-        requestAnimationFrame(tick);
-      } else {
-        confettiCtx.clearRect(0,0,W,H);
-        confettiCanvas.style.display = "none";
-      }
-    }
-    requestAnimationFrame(tick);
+  function showFeedback(isCorrect, html, onContinue){
+    const title = isCorrect ? "Correct ✅" : "Wrong ❌";
+    const body = `
+      <div class="note">${html}</div>
+      <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:14px;">
+        <button class="primary" id="continueBtn">Continue</button>
+      </div>
+    `;
+    showModal(title, body);
+    setTimeout(() => {
+      const btn = document.getElementById("continueBtn");
+      if (btn) btn.addEventListener("click", onContinue);
+    }, 0);
   }
 
-  /* =========================
-     HELPERS
-  ========================= */
+  function showModal(title, html){
+    modalTitle.textContent = title;
+    modalBody.innerHTML = html;
+    overlay.style.display = "flex";
+  }
+  function hideModal(){ overlay.style.display = "none"; }
+
+  function popOK(txt){ showPop(txt, "ok"); }
+  function popBad(txt){ showPop(txt, "bad"); }
+  function popNeutral(txt){
+    bigPop.className = "bigPop";
+    bigPop.textContent = txt;
+    bigPop.style.display = "block";
+    setTimeout(() => bigPop.style.display="none", 850);
+  }
+  function showPop(txt, cls){
+    bigPop.className = `bigPop ${cls}`;
+    bigPop.textContent = txt;
+    bigPop.style.display = "block";
+    setTimeout(() => bigPop.style.display="none", 650);
+  }
+
   function escapeHtml(s){
     return String(s)
-      .replaceAll("&","&amp;")
-      .replaceAll("<","&lt;")
-      .replaceAll(">","&gt;")
-      .replaceAll('"',"&quot;")
-      .replaceAll("'","&#039;");
+      .replace(/&/g,"&amp;")
+      .replace(/</g,"&lt;")
+      .replace(/>/g,"&gt;")
+      .replace(/"/g,"&quot;")
+      .replace(/'/g,"&#039;");
   }
 })();
 </script>
