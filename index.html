@@ -104,7 +104,6 @@
   .screen{ display:none; }
   .screen.active{ display:block; }
 
-  /* Error box */
   .errBox{
     display:none;
     margin: 12px 0 0;
@@ -118,7 +117,6 @@
     white-space: pre-wrap;
   }
 
-  /* Quiz */
   .qText{
     font-size: 16px; font-weight: 950;
     line-height: 1.35; margin: 0 0 12px;
@@ -144,7 +142,6 @@
   .optBtn:hover{ background: rgba(255,255,255,.12); }
   .note{ font-size: 12px; color: var(--muted); line-height: 1.5; }
 
-  /* Board */
   .boardWrap{ display:flex; flex-direction: column; gap: 12px; }
   .boardTopInfo{
     display:flex; justify-content:space-between; align-items:flex-start; gap:10px;
@@ -379,21 +376,15 @@
   }
 </style>
 
-<!-- 1) EARLY ERROR CAPTURE (runs even if main game script fails) -->
+<!-- Early error capture -->
 <script>
   window.__LUDO_ERRS__ = [];
-  window.__LUDO_BOOT__ = Date.now();
-
   function __pushErr(label, msg){
-    try{
-      window.__LUDO_ERRS__.push(label + ": " + msg);
-    }catch(_){}
+    try{ window.__LUDO_ERRS__.push(label + ": " + msg); }catch(_){}
   }
-
   window.addEventListener("error", function(e){
     __pushErr("JS Error", (e && e.message) ? e.message : String(e));
   });
-
   window.addEventListener("unhandledrejection", function(e){
     var r = e && e.reason;
     __pushErr("Promise Error", (r && r.message) ? r.message : String(r));
@@ -492,7 +483,6 @@
   </div>
 </div>
 
-<!-- 2) MAIN GAME SCRIPT -->
 <script>
 (function(){
   const errBox = document.getElementById("errBox");
@@ -520,9 +510,11 @@
   const RETURN_TO_MCQ_DELAY_MS = 1800;
   const SAFE_INDICES = new Set([3, 7, 11, 15, 19]);
 
+  // Path positions in 7x7 grid (visual track)
   const TRACK_GRID_INDEX = [2,3,4,5,6, 13,20,27,34,41, 46,45,44,43,42, 35,28,21,14,7, 8,9,10,11];
   const FINISH_INDEX = TRACK_GRID_INDEX.length - 1;
 
+  // Hardwired MCQs (same as previous version)
   const QUESTIONS = [
     { id:"SMS_LUDO_Q01", q:"Why is using https:// recommended when logging into social networking sites?",
       opts:["It encrypts traffic between your browser and the site","It blocks all ads automatically","It prevents account creation","It makes your posts invisible to the platform"],
@@ -632,16 +624,28 @@
   must("btnClose").addEventListener("click", hideModal);
   overlay.addEventListener("click", (e) => { if (e.target === overlay) hideModal(); });
   must("btnRestart").addEventListener("click", restart);
-  must("btnSkip").addEventListener("click", () => { if (!locked && !gameOver) { popNeutral("Skipped (no movement)"); advanceQuestion(); } });
-
-  maxPosEl.textContent = String(TRACK_GRID_INDEX.length - 1);
-  maxPos2El.textContent = String(TRACK_GRID_INDEX.length - 1);
 
   let qi=0, answered=0, correct=0, p1=0, p2=0, locked=false, gameOver=false;
 
+  maxPosEl.textContent = String(TRACK_GRID_INDEX.length - 1);
+  maxPos2El.textContent = String(TRACK_GRID_INDEX.length - 1);
+  qTotalEl.textContent = String(QUESTIONS.length);
+
+  must("btnSkip").addEventListener("click", () => {
+    if (!locked && !gameOver){
+      popNeutral("Skipped (no movement)");
+      answered += 1;
+      updateStats();
+      qi += 1;
+      showScreen("mcq");
+      renderQuestion();
+    }
+  });
+
   buildBoard();
-  drawLudoBackground();
-  window.addEventListener("resize", drawLudoBackground);
+  // Draw will be called when board is visible. Still safe to attempt once:
+  safeDraw();
+  window.addEventListener("resize", safeDraw);
 
   restart();
 
@@ -652,7 +656,17 @@
     } else {
       boardScreen.classList.add("active");
       mcqScreen.classList.remove("active");
-      requestAnimationFrame(drawLudoBackground);
+
+      // IMPORTANT: draw AFTER the board becomes visible (fix for 0-size canvas)
+      requestAnimationFrame(safeDraw);
+      setTimeout(safeDraw, 60);
+    }
+  }
+
+  function safeDraw(){
+    try{ drawLudoBackground(); }
+    catch(e){
+      showErr("Startup Error:\n" + (e && e.message ? e.message : String(e)));
     }
   }
 
@@ -709,7 +723,6 @@
     qi=0; answered=0; correct=0; p1=0; p2=0; locked=false; gameOver=false;
     diceEl.textContent = "—";
     fxLayer.innerHTML = "";
-    qTotalEl.textContent = String(QUESTIONS.length);
     updateStats();
     renderTokens();
     showScreen("mcq");
@@ -719,8 +732,15 @@
   function renderQuestion(){
     if (qi >= QUESTIONS.length){
       showErr("All questions finished. Click Restart.");
+      qTextEl.textContent = "Completed.";
+      optsEl.innerHTML = "";
       return;
     }
+
+    // Clear previous error box on normal flow
+    errBox.style.display = "none";
+    errBox.textContent = "";
+
     const Q = QUESTIONS[qi];
     qTextEl.textContent = "Q" + (answered + 1) + ". " + Q.q;
 
@@ -747,6 +767,7 @@
       correct += 1;
       popOK("Correct!");
       const roll = 1 + Math.floor(Math.random()*6);
+
       showFeedback("Correct ✅", escapeHtml(Q.fb || "Good."), async () => {
         hideModal();
         showScreen("board");
@@ -754,7 +775,6 @@
         statusTextEl.textContent = "Rolling…";
         diceEl.classList.add("rolling");
 
-        // quick dice animation
         for (let t=0;t<10;t++){
           diceEl.textContent = String(1 + Math.floor(Math.random()*6));
           await sleep(55);
@@ -774,11 +794,12 @@
       const corrL = ["A","B","C","D"][Q.a];
       const corrT = Q.opts[Q.a];
       const fb = "Correct answer: " + corrL + " — " + escapeHtml(corrT) + (Q.fb ? ("\n\n" + Q.fb) : "");
+
       showFeedback("Wrong ❌", fb, async () => {
         hideModal();
         showScreen("board");
-        animHintEl.textContent = "Wrong → computer moves +" + COMPUTER_STEP_ON_WRONG;
-        statusTextEl.textContent = "Computer moves " + COMPUTER_STEP_ON_WRONG + " step(s).";
+        animHintEl.textContent = "Wrong → computer moves +2";
+        statusTextEl.textContent = "Computer moves 2 step(s).";
         await movePlayerAnimated(2, COMPUTER_STEP_ON_WRONG);
 
         await sleep(RETURN_TO_MCQ_DELAY_MS);
@@ -871,8 +892,9 @@
     showModal("How to Play (Model B)",
       "One screen at a time: MCQ → Board animation → next MCQ.\n\n" +
       "Correct: Dice rolls and learner moves step-by-step.\n" +
-      "Wrong: Learner does not move, computer moves +" + COMPUTER_STEP_ON_WRONG + ".\n" +
-      "Safe squares: spark effect."
+      "Wrong: Learner does not move, computer moves +2.\n" +
+      "Safe squares: spark effect.\n\n" +
+      "Tip: Use Restart anytime."
     );
   }
 
@@ -909,51 +931,70 @@
     setTimeout(() => bigPop.style.display="none", 650);
   }
 
+  // FIXED drawLudoBackground() (no negative radius)
   function drawLudoBackground(){
     const rect = boardBg.getBoundingClientRect();
+
+    // If board is hidden or not laid out, width/height can be 0.
+    if (!rect.width || !rect.height || rect.width < 10 || rect.height < 10) return;
+
     const dpr = Math.max(1, window.devicePixelRatio || 1);
-    boardBg.width = Math.floor(rect.width * dpr);
+    boardBg.width  = Math.floor(rect.width * dpr);
     boardBg.height = Math.floor(rect.height * dpr);
+
     const ctx = boardBg.getContext("2d");
     ctx.setTransform(dpr,0,0,dpr,0,0);
+
     const W = rect.width, H = rect.height;
     ctx.clearRect(0,0,W,H);
 
     const pad = 12;
     const x0 = pad, y0 = pad, w = W - pad*2, h = H - pad*2;
+    if (w < 10 || h < 10) return;
+
     const halfW = w/2, halfH = h/2;
 
     ctx.fillStyle = "rgba(255,255,255,1)";
     ctx.fillRect(x0, y0, w, h);
 
-    function fillCorner(x,y,c){
-      ctx.fillStyle = c;
-      ctx.fillRect(x,y,halfW,halfH);
-      const g = ctx.createRadialGradient(x+halfW*0.25,y+halfH*0.25,10,x+halfW*0.25,y+halfH*0.25,Math.max(halfW,halfH));
-      g.addColorStop(0,"rgba(255,255,255,0.18)");
-      g.addColorStop(1,"rgba(255,255,255,0)");
-      ctx.fillStyle = g;
-      ctx.fillRect(x,y,halfW,halfH);
+    function safeRadialGradient(cx, cy, outer){
+      const outerR = Math.max(20, outer);
+      const innerR = Math.min(10, outerR - 1);
+      return ctx.createRadialGradient(cx, cy, innerR, cx, cy, outerR);
     }
 
-    fillCorner(x0,y0,"rgba(22,163,74,0.98)");
-    fillCorner(x0+halfW,y0,"rgba(250,204,21,0.98)");
-    fillCorner(x0,y0+halfH,"rgba(239,68,68,0.98)");
-    fillCorner(x0+halfW,y0+halfH,"rgba(37,99,235,0.98)");
+    function fillCorner(x, y, color){
+      ctx.fillStyle = color;
+      ctx.fillRect(x, y, halfW, halfH);
 
+      const outer = Math.max(halfW, halfH);
+      const g = safeRadialGradient(x + halfW*0.25, y + halfH*0.25, outer);
+      g.addColorStop(0, "rgba(255,255,255,0.18)");
+      g.addColorStop(1, "rgba(255,255,255,0)");
+      ctx.fillStyle = g;
+      ctx.fillRect(x, y, halfW, halfH);
+    }
+
+    fillCorner(x0,        y0,        "rgba(22,163,74,0.98)");
+    fillCorner(x0+halfW,  y0,        "rgba(250,204,21,0.98)");
+    fillCorner(x0,        y0+halfH,  "rgba(239,68,68,0.98)");
+    fillCorner(x0+halfW,  y0+halfH,  "rgba(37,99,235,0.98)");
+
+    // white cross
     ctx.fillStyle = "rgba(255,255,255,1)";
     ctx.fillRect(x0 + halfW - w*0.09, y0, w*0.18, h);
     ctx.fillRect(x0, y0 + halfH - h*0.09, w, h*0.18);
 
+    // border
     ctx.strokeStyle = "rgba(0,0,0,0.20)";
     ctx.lineWidth = 2;
-    ctx.strokeRect(x0,y0,w,h);
+    ctx.strokeRect(x0, y0, w, h);
   }
 
 })();
 </script>
 
-<!-- 3) WATCHDOG: runs even if the main script failed, and shows the reason -->
+<!-- Watchdog: if stuck on Loading, show errors -->
 <script>
 (function(){
   function $(id){ return document.getElementById(id); }
@@ -961,7 +1002,6 @@
   var qText = $("qText");
   var opts = $("opts");
 
-  // After 1 second, if options are still missing, show diagnostics.
   setTimeout(function(){
     try{
       var noOptions = !opts || opts.children.length === 0;
@@ -971,15 +1011,12 @@
         if (errBox){
           errBox.style.display = "block";
           var msgs = (window.__LUDO_ERRS__ || []);
-          var extra =
-            "The page is stuck on Loading. This means the new JS did not run on GitHub Pages.\n\n" +
-            "Fix steps (do these once):\n" +
-            "1) Hard refresh: Ctrl+F5 (Windows) / Cmd+Shift+R (Mac)\n" +
-            "2) Open the same URL with ?v=2 at the end (cache bypass)\n" +
-            "3) Confirm you replaced the correct index.html in /ludo-updated/\n\n" +
-            "Captured errors:\n" + (msgs.length ? ("- " + msgs.join("\n- ")) : "(none captured yet)");
-
-          errBox.textContent = extra;
+          errBox.textContent =
+            "The page is stuck on Loading.\n\n" +
+            "Try once:\n" +
+            "1) Ctrl+F5 (hard refresh)\n" +
+            "2) Open with ?v=2 (cache bypass)\n\n" +
+            "Captured errors:\n" + (msgs.length ? ("- " + msgs.join("\n- ")) : "(none captured)");
         }
       }
     } catch(e){
